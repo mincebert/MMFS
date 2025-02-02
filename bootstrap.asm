@@ -9,9 +9,9 @@ include "SYSVARS.asm"
 
         org     &8000
 
-; The included MMFS ROM is added to &4000 bytes (&3600 code, &A00 workspace)
+; The included MMFS ROM is added to &4000 bytes (&3700 code, &900 workspace)
 ; The guard is &CA00 as the workspace is allowed to "overflow"
-        guard   &CA00
+        guard   &C900
 
 ; A fixed buffer is now used for the copying code, as it's now self modifying
 ; and thus contains absolute addresses.
@@ -193,10 +193,10 @@ ENDIF
 
 ;; Step 2: Test if that pre-existing rom image is SWMMFS
 ;; so we re-use the same slot again and again
-        lda     &b5fe
+        lda     &b6fe
         cmp     #MAGIC0
         bne     romnxt
-        lda     &b5ff
+        lda     &b6ff
         cmp     #MAGIC1
         bne     romnxt
 
@@ -265,7 +265,7 @@ ENDIF
         inc     code_buffer + patch1 + 2 - base
         inc     code_buffer + patch2 + 2 - base
         lda     code_buffer + patch2 + 2 - base
-        cmp     #&b6
+        cmp     #&b7
         bne     cploop
 IF mode=1
         beq     exit            ; success: exit with Z=0
