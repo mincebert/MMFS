@@ -3216,9 +3216,47 @@ ENDIF
 	BMI romdisabled			; if bit 7 set
 .lbl1	PLA
 ENDIF
-
 	CMP #&12
 	BEQ SERVICE12_init_filesystem
+
+IF _DEVICE_="M" AND _SWRAM_ AND NOT(_MASTER_) AND NOT(_BP12K_)
+;; The Model B / SWRAM build of MMFS places the workspace at the end
+;; of the "ROM". In MMFS 1.58 the address of this workspace has
+;; changed from &B600 to &B700.
+;;
+;; BeebFPGA implemented this split by special casing slot 8, and
+;; mapping addresses less than &B600 to ROM and addresses greater than
+;; or equal to &B600 to RAM.
+;;
+;; The net effect of this is that currently BeebFPFA breaks with
+;; MMFS. Specifically, the end of the Tube Host code gets corrupted,
+;; because it is the code that now overlaps beyond &B600.
+;;
+;; To accomodate both old and new version of MMFS in BeebFPGA, we have
+;; have added a new hardware to the Memory Mapped interface to make
+;; this split programmable:
+;; - a SPLIT_ROM_SLOT register at &FE1E (defaults to &08)
+;; - a SPLIT_ROM_PAGE register at &FE1F (defaults to &B6)
+;;
+;; The default values provide backwards compatibility with old
+;; versions of MMFS.
+;;
+;; The only implementations of thge memory mapped interface that I'm
+;; aware of are BeebFPGA and Martin Mather's MMBeeb emulator plugin,
+;; which should ignore writes to &FE1D.
+;;
+;; Note the alternative we explored was to have BeebFPGA hardware try
+;; to infer the split by looking at the MMFS version that was
+;; installed. This is not easy to do, and so a more direct approach,
+;; outlined above, was chosen instead.
+	CMP #&10    ; service call 10 (Spool/Exec warning) is the first service call issued by MOS 1.20
+	BNE not_service_10
+	STX &FE1E   ; write current ROM number to SPLIT_ROM_SLOT register
+	LDA #&B7	   ; &B700 is the new start of overlaid RAM workspace
+	STA &FE1F	; write new workspace to SPLIT_ROM_PAGE register
+	LDA #&10
+.not_service_10
+ENDIF
 	CMP #&0B
 IF _MASTER_
 	BCC label4
