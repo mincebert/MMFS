@@ -101,7 +101,7 @@ do
             filelist="top_MGC*.asm"
         elif [ $device == "M" ]
         then
-            filelist="top_MMFS.asm top_MMFSDBG.asm top_SWMMFS.asm top_SWMMFS+.asm top_MAMMFS.asm"
+            filelist="top_MMFS.asm top_MMFSDBG.asm top_SWMMFS.asm top_SWMMFS+.asm top_MAMMFS.asm top_E*.asm"
         elif [ $device == "P" ]
         then
             filelist="top_MMFS*.asm top_MAMMFS*.asm top_SWMMFS*.asm top_ZMMFS.asm"
