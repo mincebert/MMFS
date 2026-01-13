@@ -17,9 +17,6 @@ _LARGEMMB_=NOT(_MM32_)
 \\ (costs 95 bytes)
 _DBASE_=NOT(_MM32_)
 
-\\ Fast OSGBPB code
-_FASTGBPB_=TRUE
-
 ;; At the moment, we either include or exclude all the optional commands
 
 ;; Normal Commands
