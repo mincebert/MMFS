@@ -14,3 +14,4 @@ _DEBUG=?FALSE            ; Enable debugging of service calls, etc
 _DEBUG_MMC=?FALSE        ; Enable debugging of MMC initialization
 _DFS_EMUL=?TRUE          ; Use DFS filesystem number + handles
 _FASTGBPB_=?TRUE         ; Include FAST OSGBPB
+_DEFAULT_LIB_DRIVE_=?0   ; Default drive for *LIB
